@@ -1,0 +1,25 @@
+{
+    "pluginAlias": "CountdownBulb",
+    "pluginType": "accessory",
+    "singular": false,
+    "headerDisplay": "Homebridge plugin for creating a bulb, where it's brightness indicates the time remaining.",
+    "footerDisplay": "Created by teh-hippo",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "title": "Accessory Name",
+                "description": "Name for the accessory",
+                "type": "string",
+                "required": true
+            },
+            "interval": {
+                "title": "Interval Time in Milliseconds",
+                "description": "Amount of time in milliseconds to wait in between each decrement of the brightness",
+                "type": "integer",
+                "default": 60000,
+                "required": true
+            }
+        }
+    }
+  }

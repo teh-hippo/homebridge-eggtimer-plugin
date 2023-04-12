@@ -1,0 +1,32 @@
+{
+  "name": "homebridge-countdown-bulb",
+  "version": "1.0.0-beta.1",
+  "description": "Countdown Bulbs for Homebridge: https://github.com/nfarina/homebridge",
+  "license": "MIT",
+  "keywords": [
+    "homebridge-plugin",
+    "countdown",
+    "brightness",
+    "delay",
+    "timer",
+    "bulb",
+    "lightbulb",
+    "automation",
+    "homebridge"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/teh-hippo/homebridge-countdown-bulb.git"
+  },
+  "bugs": {
+    "url": "http://github.com/teh-hippo/homebridge-countdown-bulb/issues"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  }
+}
