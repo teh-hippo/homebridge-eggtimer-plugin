@@ -1,8 +1,8 @@
 {
-    "pluginAlias": "CountdownBulb",
+    "pluginAlias": "EggTimerBulb",
     "pluginType": "accessory",
     "singular": false,
-    "headerDisplay": "Homebridge plugin for creating a bulb, where it's brightness indicates the time remaining.",
+    "headerDisplay": "Everyday egg timers for HomeBridge",
     "footerDisplay": "Created by teh-hippo",
     "schema": {
         "type": "object",

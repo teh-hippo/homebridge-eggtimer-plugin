@@ -3,11 +3,11 @@ var Service, Characteristic;
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    homebridge.registerAccessory("homebridge-countdown-bulb", "CountdownBulb", countdownBulb);
+    homebridge.registerAccessory("homebridge-eggtimer-plugin", "EggTimerBulb", eggTimerBulb);
 }
 
 
-function countdownBulb(log, config, api) {
+function eggTimerBulb(log, config, api) {
     let UUIDGen = api.hap.uuid;
 
     this.log = log;
@@ -18,11 +18,11 @@ function countdownBulb(log, config, api) {
     this.uuid = UUIDGen.generate(this.name);
 }
 
-countdownBulb.prototype.getServices = function () {
+eggTimerBulb.prototype.getServices = function () {
     var informationService = new Service.AccessoryInformation();
 
     informationService
-        .setCharacteristic(Characteristic.Manufacturer, "Countdown Switch")
+        .setCharacteristic(Characteristic.Manufacturer, "Egg Timer Bulb")
         .setCharacteristic(Characteristic.Model, `Interval-${this.interval}ms`)
         .setCharacteristic(Characteristic.SerialNumber, this.uuid);
 
@@ -42,11 +42,11 @@ countdownBulb.prototype.getServices = function () {
 
 }
 
-countdownBulb.prototype.getBrightness = function (callback) {
+eggTimerBulb.prototype.getBrightness = function (callback) {
     callback(null, this.brightness);
 }
 
-countdownBulb.prototype.setBrightness = function (brightness, callback) {
+eggTimerBulb.prototype.setBrightness = function (brightness, callback) {
   this.log(`[${this.name}] User updating the brightness: ${brightness} (currently: ${this.brightness})`);
   this.brightness = Math.min(100, brightness);
   this.lightbulbService.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
@@ -55,13 +55,13 @@ countdownBulb.prototype.setBrightness = function (brightness, callback) {
   if (this.brightness <= 0) {
       this.log(`[${this.name}] Clearing a running timer`);
   } else if (this.brightness > 0) {
-      this.log(`[${this.name}] Starting a countdown from: ${this.brightness} (interval: ${this.interval})`);
+      this.log(`[${this.name}] Starting a timer from: ${this.brightness} (interval: ${this.interval})`);
       this.timer = setInterval(function() {
-        this.log(`[${this.name}] Timer update: ${this.brightness} (currently: ${--this.brightness})`);  
+        this.log(`[${this.name}] Update: ${this.brightness} (currently: ${--this.brightness})`);  
         this.lightbulbService.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
         this.lightbulbService.getCharacteristic(Characteristic.On).updateValue(this.brightness > 0);
         if (this.brightness <= 0) {
-          this.log(`[${this.name}] Countdown has completed`);
+          this.log(`[${this.name}] Timer has completed`);
           this.brightness = 0;
           clearInterval(this.timer);
         }
@@ -71,11 +71,11 @@ countdownBulb.prototype.setBrightness = function (brightness, callback) {
     callback();
 }
 
-countdownBulb.prototype.getOn = function (callback) {
+eggTimerBulb.prototype.getOn = function (callback) {
   callback(null, this.brightness > 0);
 }
 
-countdownBulb.prototype.setOn = function (on, callback) {
+eggTimerBulb.prototype.setOn = function (on, callback) {
   this.log(`[${this.name}] Attempt to set on to: ${on} (brightness: ${this.brightness})`);
   callback();
 }

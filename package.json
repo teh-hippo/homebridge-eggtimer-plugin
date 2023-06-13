@@ -1,32 +1,26 @@
 {
-  "name": "homebridge-countdown-bulb",
+  "name": "homebridge-eggtimer-plugin",
   "version": "1.0.1-beta.0",
-  "description": "Countdown Bulbs for Homebridge: https://github.com/nfarina/homebridge",
+  "description": "Egg Timers for Homebridge: https://github.com/nfarina/homebridge",
   "license": "MIT",
   "keywords": [
     "homebridge-plugin",
-    "countdown",
-    "brightness",
-    "delay",
+    "egg-timer",
     "timer",
-    "bulb",
-    "lightbulb",
+    "countdown",
+    "delay",
     "automation",
     "homebridge"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/teh-hippo/homebridge-countdown-bulb.git"
+    "url": "git://github.com/teh-hippo/homebridge-eggtimer-plugin.git"
   },
   "bugs": {
-    "url": "http://github.com/teh-hippo/homebridge-countdown-bulb/issues"
+    "url": "http://github.com/teh-hippo/homebridge-eggtimer-plugin/issues"
   },
   "engines": {
     "node": ">=0.12.0",
     "homebridge": ">=0.2.0"
-  },
-  "devDependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^10.2.0"
   }
 }
