@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v3.6.0
         with:
           node-version: 18
-      - run: npm version ${{env.version}} --no-git-tag-version
+      - run: npm version patch --no-git-tag-version
       - run: npm ci
       - run: npm test
 
