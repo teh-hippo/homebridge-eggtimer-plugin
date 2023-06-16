@@ -1,31 +1,27 @@
-var Service, Characteristic;
+let Service;
+let Characteristic;
+
+function eggTimerBulb(log, config, api) {
+  this.log = log;
+  this.name = config.name;
+  this.interval = Math.max(1, config.interval);
+  this.brightness = 0;
+  this.uuid = api.hap.uuid.generate(this.name);
+}
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    homebridge.registerAccessory("homebridge-eggtimer-plugin", "EggTimerBulb", eggTimerBulb);
-}
-
-
-function eggTimerBulb(log, config, api) {
-    let UUIDGen = api.hap.uuid;
-
-    this.log = log;
-    this.name = config['name'];
-    this.interval = Math.max(1, config['interval']);
-    this.timer;
-    this.brightness = 0;
-    this.uuid = UUIDGen.generate(this.name);
-}
+    homebridge.registerAccessory('homebridge-eggtimer-plugin', 'EggTimerBulb', eggTimerBulb);
+};
 
 eggTimerBulb.prototype.getServices = function () {
-    var informationService = new Service.AccessoryInformation();
+    const informationService = new Service.AccessoryInformation();
 
     informationService
-        .setCharacteristic(Characteristic.Manufacturer, "Egg Timer Bulb")
+        .setCharacteristic(Characteristic.Manufacturer, 'Egg Timer Bulb')
         .setCharacteristic(Characteristic.Model, `Interval-${this.interval}ms`)
         .setCharacteristic(Characteristic.SerialNumber, this.uuid);
-
 
     this.lightbulbService = new Service.Lightbulb(this.name);
 
@@ -37,14 +33,12 @@ eggTimerBulb.prototype.getServices = function () {
         .on('get', this.getBrightness.bind(this))
         .on('set', this.setBrightness.bind(this));
 
-    var services = [informationService, this.lightbulbService]
-    return services;
-
-}
+    return [informationService, this.lightbulbService];
+};
 
 eggTimerBulb.prototype.getBrightness = function (callback) {
     callback(null, this.brightness);
-}
+};
 
 eggTimerBulb.prototype.setBrightness = function (brightness, callback) {
   this.log(`[${this.name}] User updating the brightness: ${brightness} (currently: ${this.brightness})`);
@@ -56,8 +50,8 @@ eggTimerBulb.prototype.setBrightness = function (brightness, callback) {
       this.log(`[${this.name}] Clearing a running timer`);
   } else if (this.brightness > 0) {
       this.log(`[${this.name}] Starting a timer from: ${this.brightness} (interval: ${this.interval})`);
-      this.timer = setInterval(function() {
-        this.log(`[${this.name}] Update: ${this.brightness} (currently: ${--this.brightness})`);  
+      const intervalCallback = () => {
+        this.log(`[${this.name}] Update: ${this.brightness} (currently: ${--this.brightness})`);
         this.lightbulbService.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
         this.lightbulbService.getCharacteristic(Characteristic.On).updateValue(this.brightness > 0);
         if (this.brightness <= 0) {
@@ -65,17 +59,19 @@ eggTimerBulb.prototype.setBrightness = function (brightness, callback) {
           this.brightness = 0;
           clearInterval(this.timer);
         }
-      }.bind(this), this.interval);
+      };
+
+      this.timer = setInterval(intervalCallback.bind(this), this.interval);
     }
-  
+
     callback();
-}
+};
 
 eggTimerBulb.prototype.getOn = function (callback) {
   callback(null, this.brightness > 0);
-}
+};
 
 eggTimerBulb.prototype.setOn = function (on, callback) {
   this.log(`[${this.name}] Attempt to set on to: ${on} (brightness: ${this.brightness})`);
   callback();
-}
+};
