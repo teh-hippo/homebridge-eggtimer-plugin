@@ -1,6 +1,6 @@
 {
   "name": "homebridge-eggtimer-plugin",
-  "version": "1.0.2-beta.0",
+  "version": "1.0.2",
   "description": "Egg Timers for Homebridge: https://github.com/nfarina/homebridge",
   "license": "MIT",
   "keywords": [
@@ -21,8 +21,8 @@
     "url": "http://github.com/teh-hippo/homebridge-eggtimer-plugin/issues"
   },
   "funding": {
-   "type" : "paypal",
-    "url" : "https://github.com/tehhippo"
+    "type": "paypal",
+    "url": "https://github.com/tehhippo"
   },
   "engines": {
     "node": ">=16.0.0",
