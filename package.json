@@ -21,8 +21,8 @@
     "url": "http://github.com/teh-hippo/homebridge-eggtimer-plugin/issues"
   },
   "funding": {
-    "type": "paypal",
-    "url": "https://github.com/tehhippo"
+    "type": "github",
+    "url": "https://github.com/sponsors/teh-hippo"
   },
   "engines": {
     "node": ">=16.0.0",
