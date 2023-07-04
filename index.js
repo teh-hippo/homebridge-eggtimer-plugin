@@ -41,21 +41,21 @@ eggTimerBulb.prototype.getBrightness = function (callback) {
 };
 
 eggTimerBulb.prototype.setBrightness = function (brightness, callback) {
-  this.log(`[${this.name}] User updating the brightness: ${brightness} (currently: ${this.brightness})`);
+  this.log.debug(`[${this.name}] User updating the brightness: ${brightness} (currently: ${this.brightness})`);
   this.brightness = Math.min(100, brightness);
   this.lightbulbService.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
   clearInterval(this.timer);
 
   if (this.brightness <= 0) {
-      this.log(`[${this.name}] Clearing a running timer`);
+      this.log.debug(`[${this.name}] Clearing a running timer`);
   } else if (this.brightness > 0) {
-      this.log(`[${this.name}] Starting a timer from: ${this.brightness} (interval: ${this.interval})`);
+      this.log.info(`[${this.name}] Starting timer: ${this.brightness} (interval: ${this.interval})`);
       const intervalCallback = () => {
-        this.log(`[${this.name}] Update: ${this.brightness} (currently: ${--this.brightness})`);
+        this.log.debug(`[${this.name}] Update: ${this.brightness} (currently: ${--this.brightness})`);
         this.lightbulbService.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
         this.lightbulbService.getCharacteristic(Characteristic.On).updateValue(this.brightness > 0);
         if (this.brightness <= 0) {
-          this.log(`[${this.name}] Timer has completed`);
+          this.log.info(`[${this.name}] Timer has completed`);
           this.brightness = 0;
           clearInterval(this.timer);
         }
@@ -72,6 +72,6 @@ eggTimerBulb.prototype.getOn = function (callback) {
 };
 
 eggTimerBulb.prototype.setOn = function (on, callback) {
-  this.log(`[${this.name}] Attempt to set on to: ${on} (brightness: ${this.brightness})`);
+  this.log.debug(`[${this.name}] Attempt to set on to: ${on} (brightness: ${this.brightness})`);
   callback();
 };
