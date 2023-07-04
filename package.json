@@ -30,9 +30,9 @@
   },
   "devDependencies": {
     "eslint": "^8.40.0",
+    "minimist": "^1.2.8",
     "xo": "^0.54.2",
-    "yargs-parser": "^21.1.1",
-    "minimist": "^1.2.8"
+    "yargs-parser": "^21.1.1"
   },
   "scripts": {
     "test": "xo"
