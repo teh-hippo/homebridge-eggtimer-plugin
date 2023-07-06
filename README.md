@@ -12,10 +12,10 @@ Example config.json:
 ```json
     "accessories": [
         {
-            "name": "AirconHeat",
+            "name": "Timer Bulb 1",
             "interval": 60000,
-            "accessory": "TimerBulb"
-        }
+            "accessory": "EggTimerBulb"
+        },
     ]
 ```
 
