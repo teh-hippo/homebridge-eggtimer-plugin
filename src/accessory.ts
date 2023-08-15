@@ -25,7 +25,7 @@ class EggTimerBulb implements AccessoryPlugin {
   private readonly informationService: Service;
   private readonly interval: number;
   private brightness = 0;
-  private timer: NodeJS.Timer | undefined;
+  private timer: NodeJS.Timeout | undefined;
 
   constructor(log: Logging, config: AccessoryConfig) {
     this.log = log;
