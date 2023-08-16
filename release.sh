@@ -1,2 +1,2 @@
 #!/bin/bash
-npm version patch && git push --tags && git push
+npm version patch && npm version prepatch && git push --tags && git push
