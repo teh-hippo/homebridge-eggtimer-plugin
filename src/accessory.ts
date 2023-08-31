@@ -23,6 +23,7 @@ class EggTimerBulb implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly lightbulbService: Service;
   private readonly informationService: Service;
+  private readonly occupancyService: Service | undefined;
   private readonly interval: number;
   private brightness = 0;
   private timer: NodeJS.Timeout | undefined;
@@ -44,13 +45,25 @@ class EggTimerBulb implements AccessoryPlugin {
     this.informationService = new hap.Service.AccessoryInformation()
       .setCharacteristic(hap.Characteristic.Manufacturer, 'Egg Timer Bulb')
       .setCharacteristic(hap.Characteristic.Model, `${config.name} (${this.interval}ms)`);
+
+    if(config.occupancySensor === true) {
+      this.occupancyService = new hap.Service.OccupancySensor(`${config.name} Active`);
+      this.occupancyService.getCharacteristic(hap.Characteristic.OccupancyDetected)
+        .on(CharacteristicEventTypes.GET, this.getOccupancy.bind(this));
+    }
   }
 
   getServices(): Service[] {
-    return [
+    const services = [
       this.informationService,
       this.lightbulbService,
     ];
+
+    if (this.occupancyService) {
+      services.push(this.occupancyService);
+    }
+
+    return services;
   }
 
   private getOn(callback: CharacteristicGetCallback): void {
@@ -73,6 +86,10 @@ class EggTimerBulb implements AccessoryPlugin {
     const brightness = value as number;
     this.updateBrightness(brightness);
     callback();
+  }
+
+  private getOccupancy(callback: CharacteristicGetCallback): void {
+    callback(undefined, this.brightness > 0);
   }
 
   private updateBrightness(value: number): void {

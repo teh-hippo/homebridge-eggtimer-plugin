@@ -19,6 +19,12 @@
                 "type": "integer",
                 "default": 60000,
                 "required": true
+            },
+            "occupant": {
+                "title": "Occupancy Sensor",
+                "description": "Create an occupancy sensor to reflect the timer state",
+                "type": "boolean",
+                "required": false
             }
         }
     }
