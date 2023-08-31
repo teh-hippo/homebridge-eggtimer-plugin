@@ -20,9 +20,9 @@
                 "default": 60000,
                 "required": true
             },
-            "occupant": {
+            "occupancySensor": {
                 "title": "Occupancy Sensor",
-                "description": "Create an occupancy sensor to reflect the timer state",
+                "description": "Add an occupancy sensor that reflects the timer's current state",
                 "type": "boolean",
                 "required": false
             }

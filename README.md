@@ -14,7 +14,8 @@ Example config.json:
         {
             "name": "Timer Bulb 1",
             "interval": 60000,
-            "accessory": "EggTimerBulb"
+            "occupancySensor": false,
+            "accessory": "EggTimerBulb",
         },
     ]
 ```
@@ -35,3 +36,4 @@ Other example usages found since:
 | Parameter | Description | Default |
 | --------- | ----- | ------- |
 | `interval`| How often to decrement the brightness. | `60000` (1 minute) |
+| `occupancySensor`| Add an occupancy sensor that reflects the timer's current state. | `false` |
