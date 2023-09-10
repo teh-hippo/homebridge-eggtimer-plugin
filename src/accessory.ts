@@ -11,10 +11,7 @@ import {
   Service,
 } from 'homebridge';
 
-let hap: HAP;
-
 export = (api: API) => {
-  hap = api.hap;
   api.registerAccessory('EggTimerBulb', EggTimerBulb);
 };
 
@@ -25,30 +22,32 @@ class EggTimerBulb implements AccessoryPlugin {
   private readonly informationService: Service;
   private readonly occupancyService: Service | undefined;
   private readonly interval: number;
+  private readonly hap: HAP;
   private brightness = 0;
   private timer: NodeJS.Timeout | undefined;
 
-  constructor(log: Logging, config: AccessoryConfig) {
+  constructor(log: Logging, config: AccessoryConfig, api: API) {
     this.log = log;
+    this.hap = api.hap;
     this.interval = config.interval;
 
-    this.lightbulbService = new hap.Service.Lightbulb(config.name);
+    this.lightbulbService = new this.hap.Service.Lightbulb(config.name);
 
-    this.lightbulbService.getCharacteristic(hap.Characteristic.On)
+    this.lightbulbService.getCharacteristic(this.hap.Characteristic.On)
       .on(CharacteristicEventTypes.GET, this.getOn.bind(this))
       .on(CharacteristicEventTypes.SET, this.setOn.bind(this));
 
-    this.lightbulbService.getCharacteristic(hap.Characteristic.Brightness)
+    this.lightbulbService.getCharacteristic(this.hap.Characteristic.Brightness)
       .on(CharacteristicEventTypes.GET, this.getBrightness.bind(this))
       .on(CharacteristicEventTypes.SET, this.setBrightness.bind(this));
 
-    this.informationService = new hap.Service.AccessoryInformation()
-      .setCharacteristic(hap.Characteristic.Manufacturer, 'Egg Timer Bulb')
-      .setCharacteristic(hap.Characteristic.Model, `${config.name} (${this.interval}ms)`);
+    this.informationService = new this.hap.Service.AccessoryInformation()
+      .setCharacteristic(this.hap.Characteristic.Manufacturer, 'Egg Timer Bulb')
+      .setCharacteristic(this.hap.Characteristic.Model, `${config.name} (${this.interval}ms)`);
 
     if(config.occupancySensor === true) {
-      this.occupancyService = new hap.Service.OccupancySensor(`${config.name} Active`);
-      this.occupancyService.getCharacteristic(hap.Characteristic.OccupancyDetected)
+      this.occupancyService = new this.hap.Service.OccupancySensor(`${config.name} Active`);
+      this.occupancyService.getCharacteristic(this.hap.Characteristic.OccupancyDetected)
         .on(CharacteristicEventTypes.GET, this.getOccupancy.bind(this));
     }
   }
@@ -95,8 +94,8 @@ class EggTimerBulb implements AccessoryPlugin {
   private updateBrightness(value: number): void {
     this.log.debug(`Brightness: ${this.brightness} -> ${value}`);
     this.brightness = Math.max(0, Math.min(100, value));
-    this.lightbulbService.getCharacteristic(hap.Characteristic.Brightness).updateValue(this.brightness);
-    this.lightbulbService.getCharacteristic(hap.Characteristic.On).updateValue(this.brightness > 0);
+    this.lightbulbService.getCharacteristic(this.hap.Characteristic.Brightness).updateValue(this.brightness);
+    this.lightbulbService.getCharacteristic(this.hap.Characteristic.On).updateValue(this.brightness > 0);
     if (this.brightness > 0 && this.timer === undefined) {
       this.log.info('Starting timer');
       this.timer = setInterval(() => this.updateBrightness(this.brightness - 1), this.interval);
