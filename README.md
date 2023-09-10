@@ -14,6 +14,7 @@ Example config.json:
         {
             "name": "Timer Bulb 1",
             "interval": 60000,
+            "stateful": false,
             "occupancySensor": false,
             "accessory": "EggTimerBulb",
         },
@@ -27,13 +28,14 @@ Different to [homebridge-delay-switch](https://github.com/nitaybz/homebridge-del
 This was created originally created to help with kids' bedtime routines, where nightlights would be turned off automatically after an allowed amount of reading time (call me crazy, its 2023).
 
 Other example usages found since:
-* Automating a desk heater for bursts of heat in the winter.
-* Running our aircon for a while and having it turn off automatically.
 
+* Automating a desk heater for bursts of heat in the winter.
+* Running our air-con for a while and having it turn off automatically.
 
 ## Parameters
 
 | Parameter | Description | Default |
 | --------- | ----- | ------- |
 | `interval`| How often to decrement the brightness. | `60000` (1 minute) |
+| `stateful`| Persist the timer state between restarts. | `false` |
 | `occupancySensor`| Add an occupancy sensor that reflects the timer's current state. | `false` |
