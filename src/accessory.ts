@@ -129,11 +129,15 @@ class EggTimerBulb implements AccessoryPlugin {
     }
 
     // Update HomeKit
-    this.lightbulbService.getCharacteristic(this.hap.Characteristic.Brightness).updateValue(this.brightness);
-    this.lightbulbService.getCharacteristic(this.hap.Characteristic.On).updateValue(this.brightness > 0);
+    const isActive = this.brightness > 0;
+    this.lightbulbService.setCharacteristic(this.hap.Characteristic.Brightness, this.brightness);
+    this.lightbulbService.setCharacteristic(this.hap.Characteristic.On, isActive);
+    if (this.occupancyService !== undefined) {
+      this.occupancyService.setCharacteristic(this.hap.Characteristic.OccupancyDetected, isActive);
+    }
 
     // Update Timer
-    if (this.brightness > 0 && this.timer === undefined) {
+    if (isActive && this.timer === undefined) {
       this.log.info('Starting timer');
       this.timer = setInterval(async () => await this.updateBrightness(this.brightness - 1), this.interval);
     } else if (this.brightness === 0) {
