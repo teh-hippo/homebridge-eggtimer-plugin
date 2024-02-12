@@ -2,9 +2,6 @@ import {
   AccessoryConfig,
   AccessoryPlugin,
   API,
-  CharacteristicEventTypes,
-  CharacteristicGetCallback,
-  CharacteristicSetCallback,
   CharacteristicValue,
   HAP,
   Logging,
@@ -45,12 +42,12 @@ class EggTimerBulb implements AccessoryPlugin {
     this.lightbulbService = new this.hap.Service.Lightbulb(config.name);
 
     this.lightbulbService.getCharacteristic(this.hap.Characteristic.On)
-      .on(CharacteristicEventTypes.GET, this.getOn.bind(this))
-      .on(CharacteristicEventTypes.SET, this.setOn.bind(this));
+      .onGet(this.getOn.bind(this))
+      .onSet(this.setOn.bind(this));
 
     this.lightbulbService.getCharacteristic(this.hap.Characteristic.Brightness)
-      .on(CharacteristicEventTypes.GET, this.getBrightness.bind(this))
-      .on(CharacteristicEventTypes.SET, this.setBrightness.bind(this));
+      .onGet(this.getBrightness.bind(this))
+      .onSet(this.setBrightness.bind(this));
 
     this.informationService = new this.hap.Service.AccessoryInformation()
       .setCharacteristic(this.hap.Characteristic.Manufacturer, 'Egg Timer Bulb')
@@ -64,7 +61,7 @@ class EggTimerBulb implements AccessoryPlugin {
     if(config.occupancySensor === true) {
       this.occupancyService = new this.hap.Service.OccupancySensor(`${config.name} Active`);
       this.occupancyService.getCharacteristic(this.hap.Characteristic.OccupancyDetected)
-        .on(CharacteristicEventTypes.GET, this.getOccupancy.bind(this));
+        .onGet(this.getOccupancy.bind(this));
     }
 
     if (this.stateful) {
@@ -85,32 +82,31 @@ class EggTimerBulb implements AccessoryPlugin {
     return services;
   }
 
-  private async getOn(callback: CharacteristicGetCallback): Promise<void> {
+  private async getOn(): Promise<boolean> {
     await this.restoreState();
-    callback(undefined, this.brightness > 0);
+    return this.brightness > 0
   }
 
-  private async setOn(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void> {
+  private async setOn(value: CharacteristicValue): Promise<void> {
     if (!(value as boolean)) {
       this.log.info('Manually stopping timer.');
       await this.updateBrightness(0);
     }
-    callback();
   }
 
-  private async getBrightness(callback: CharacteristicGetCallback): Promise<void> {
+  private async getBrightness(): Promise<number> {
     await this.restoreState();
-    callback(undefined, this.brightness);
+    return this.brightness;
   }
 
-  private async setBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback): Promise<void> {
+  private async setBrightness(value: CharacteristicValue): Promise<void> {
     const brightness = value as number;
     await this.updateBrightness(brightness);
-    callback();
   }
 
-  private getOccupancy(callback: CharacteristicGetCallback): void {
-    callback(undefined, this.brightness > 0);
+  private async getOccupancy(): Promise<boolean> {
+    await this.restoreState();
+    return this.brightness > 0;
   }
 
   private async updateBrightness(value: number): Promise<void> {
@@ -130,10 +126,10 @@ class EggTimerBulb implements AccessoryPlugin {
 
     // Update HomeKit
     const isActive = this.brightness > 0;
-    this.lightbulbService.setCharacteristic(this.hap.Characteristic.Brightness, this.brightness);
-    this.lightbulbService.setCharacteristic(this.hap.Characteristic.On, isActive);
+    this.lightbulbService.updateCharacteristic(this.hap.Characteristic.Brightness, this.brightness);
+    this.lightbulbService.updateCharacteristic(this.hap.Characteristic.On, isActive);
     if (this.occupancyService !== undefined) {
-      this.occupancyService.setCharacteristic(this.hap.Characteristic.OccupancyDetected, isActive);
+      this.occupancyService.updateCharacteristic(this.hap.Characteristic.OccupancyDetected, isActive);
     }
 
     // Update Timer
