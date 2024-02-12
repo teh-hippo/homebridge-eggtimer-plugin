@@ -84,7 +84,7 @@ class EggTimerBulb implements AccessoryPlugin {
 
   private async getOn(): Promise<boolean> {
     await this.restoreState();
-    return this.brightness > 0
+    return this.brightness > 0;
   }
 
   private async setOn(value: CharacteristicValue): Promise<void> {
