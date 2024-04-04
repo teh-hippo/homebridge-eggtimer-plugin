@@ -5,30 +5,38 @@ name: Node.js Package
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
           node-version: 18
       - run: npm ci
       - run: npm run prepublishOnly
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  update-build-number:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-tags: true
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 18
+      - name: get-npm-version
+        id: version-after
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Bump version to ${{ steps.version-after.outputs.current-version }}
