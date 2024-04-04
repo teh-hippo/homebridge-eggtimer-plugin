@@ -35,6 +35,7 @@ jobs:
       - uses: actions/setup-node@v4.0.2
         with:
           node-version: 18
+      - run: npm version patch
       - name: get-npm-version
         id: version-after
         uses: martinbeentjes/npm-get-version-action@v1.3.1
