@@ -1,19 +1,18 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build
+name: Audit
 
-on: [push, pull_request]
+on:
+  
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
-
   build:
 
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x]
 
     steps:
     - uses: actions/checkout@v4
@@ -22,10 +21,10 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 20.x
       uses: actions/setup-node@v4.0.2
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20.x
     - uses: pnpm/action-setup@v3
     - run: pnpm install --frozen-lockfile
-    - run: pnpm lint
+    - run: pnpm audit
