@@ -1,7 +1,7 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Node.js Package
+name: Release
 
 on:
   release:
@@ -12,15 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.1
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm run prepublishOnly
-      - run: npm publish
+      - uses: pnpm/action-setup@v3
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm publish --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   update-build-number:
     needs: publish
@@ -32,10 +33,12 @@ jobs:
         with:
           ref: main
           fetch-tags: true
-      - uses: actions/setup-node@v4.0.2
+      - uses: actions/setup-node@v4.0.1
         with:
           node-version: 18
-      - run: npm version patch
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v3
+      - run: pnpm version patch --no-git-tag-version
       - name: get-npm-version
         id: version-after
         uses: martinbeentjes/npm-get-version-action@v1.3.1
