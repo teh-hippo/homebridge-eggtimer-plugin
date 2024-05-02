@@ -27,7 +27,7 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -53,4 +53,4 @@ jobs:
             Bump to version ${{ steps.version-after.outputs.current-version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           committer: AutoHippo <auto@hippo.org>
-          branch: autohippo/openapi-update-${{ github.run_number }}
+          branch: bump-to-version-${{ steps.version-after.outputs.current-version }}
