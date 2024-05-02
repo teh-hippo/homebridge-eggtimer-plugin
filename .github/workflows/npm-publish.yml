@@ -1,0 +1,59 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v3
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  update-build-number:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-tags: true
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v3
+      - run: pnpm version patch --no-git-tag-version
+      - name: get-npm-version
+        id: version-after
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Bump version to ${{ steps.version-after.outputs.current-version }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: |
+            package.json
+          delete-branch: true
+          title: Bump to version ${{ steps.version-after.outputs.current-version }}
+          commit-message: |
+            Bump to version ${{ steps.version-after.outputs.current-version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          committer: AutoHippo <auto@hippo.org>
+          branch: autohippo/openapi-update-${{ github.run_number }}
