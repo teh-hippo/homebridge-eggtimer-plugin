@@ -45,3 +45,15 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Bump version to ${{ steps.version-after.outputs.current-version }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: |
+            package.json
+          delete-branch: true
+          title: Bump to version ${{ steps.version-after.outputs.current-version }}
+          commit-message: |
+            Bump to version ${{ steps.version-after.outputs.current-version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          committer: AutoHippo <auto@hippo.org>
+          branch: autohippo/openapi-update-${{ github.run_number }}
