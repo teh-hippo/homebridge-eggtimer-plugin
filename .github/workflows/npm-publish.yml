@@ -42,9 +42,6 @@ jobs:
       - name: get-npm-version
         id: version-after
         uses: martinbeentjes/npm-get-version-action@v1.3.1
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Bump version to ${{ steps.version-after.outputs.current-version }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
