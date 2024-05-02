@@ -5,20 +5,19 @@ import {
   CharacteristicValue,
   HAP,
   Logging,
-  Service,
-} from 'homebridge';
+  Service
+} from "homebridge";
 
 import {
   init,
   set,
   get,
-  del,
-} from 'node-persist';
+  del
+} from "node-persist";
 
-import AsyncLock from 'async-lock';
+import AsyncLock from "async-lock";
 
 class EggTimerBulb implements AccessoryPlugin {
-
   private readonly log: Logging;
   private readonly lightbulbService: Service;
   private readonly informationService: Service;
@@ -27,8 +26,8 @@ class EggTimerBulb implements AccessoryPlugin {
   private readonly hap: HAP;
   private readonly storageKey: string;
   private readonly storageDir: string;
-  private readonly stateful : boolean;
-  private readonly lock : AsyncLock;
+  private readonly stateful: boolean;
+  private readonly lock: AsyncLock;
   private brightness = 0;
   private timer: NodeJS.Timeout | undefined;
   private stateRestored: boolean;
@@ -36,7 +35,7 @@ class EggTimerBulb implements AccessoryPlugin {
   constructor(log: Logging, config: AccessoryConfig, api: API) {
     this.log = log;
     this.hap = api.hap;
-    this.interval = config.interval;
+    this.interval = Number(config.interval);
     this.stateRestored = false;
 
     this.lightbulbService = new this.hap.Service.Lightbulb(config.name);
@@ -50,29 +49,31 @@ class EggTimerBulb implements AccessoryPlugin {
       .onSet(this.setBrightness.bind(this));
 
     this.informationService = new this.hap.Service.AccessoryInformation()
-      .setCharacteristic(this.hap.Characteristic.Manufacturer, 'Egg Timer Bulb')
-      .setCharacteristic(this.hap.Characteristic.Model, `${config.name} (${this.interval}ms)`);
+      .setCharacteristic(this.hap.Characteristic.Manufacturer, "Egg Timer Bulb")
+      .setCharacteristic(this.hap.Characteristic.Model, `${config.name} (${this.interval.toString()}ms)`);
 
     this.stateful = config.stateful === true;
-    this.storageKey = `${config.name}-${config.interval}`;
+    this.storageKey = `${config.name}-${this.interval.toString()}`;
     this.storageDir = api.user.persistPath();
     this.lock = new AsyncLock();
 
-    if(config.occupancySensor === true) {
+    if (config.occupancySensor === true) {
       this.occupancyService = new this.hap.Service.OccupancySensor(`${config.name} Active`);
       this.occupancyService.getCharacteristic(this.hap.Characteristic.OccupancyDetected)
         .onGet(this.getOccupancy.bind(this));
     }
 
     if (this.stateful) {
-      this.restoreState();
+      this.restoreState().catch((error: unknown) => {
+        this.log.error(String(error));
+      });
     }
   }
 
   getServices(): Service[] {
     const services = [
       this.informationService,
-      this.lightbulbService,
+      this.lightbulbService
     ];
 
     if (this.occupancyService) {
@@ -89,7 +90,7 @@ class EggTimerBulb implements AccessoryPlugin {
 
   private async setOn(value: CharacteristicValue): Promise<void> {
     if (!(value as boolean)) {
-      this.log.info('Manually stopping timer.');
+      this.log.info("Manually stopping timer.");
       await this.updateBrightness(0);
     }
   }
@@ -110,16 +111,16 @@ class EggTimerBulb implements AccessoryPlugin {
   }
 
   private async updateBrightness(value: number): Promise<void> {
-    this.log.debug(`Brightness: ${this.brightness} -> ${value}`);
+    this.log.debug(`Brightness: ${this.brightness.toString()} -> ${value.toString()}`);
     this.brightness = Math.max(0, Math.min(100, value));
 
     // Persist state
     if (this.stateful) {
       if (this.brightness > 0) {
-        this.log.debug('Caching state');
+        this.log.debug("Caching state");
         await set(this.storageKey, this.brightness);
       } else {
-        this.log.debug('Deleting state');
+        this.log.debug("Deleting state");
         await del(this.storageKey);
       }
     }
@@ -134,10 +135,14 @@ class EggTimerBulb implements AccessoryPlugin {
 
     // Update Timer
     if (isActive && this.timer === undefined) {
-      this.log.info('Starting timer');
-      this.timer = setInterval(async () => await this.updateBrightness(this.brightness - 1), this.interval);
+      this.log.info("Starting timer");
+      this.timer = setInterval(() => {
+        this.updateBrightness(this.brightness - 1).catch((error: unknown) => {
+          this.log.error(String(error));
+        });
+      }, this.interval);
     } else if (this.brightness === 0) {
-      this.log.info('Timer completed.');
+      this.log.info("Timer completed.");
       clearInterval(this.timer);
       this.timer = undefined;
     }
@@ -148,23 +153,23 @@ class EggTimerBulb implements AccessoryPlugin {
       return;
     }
 
-    await this.lock.acquire('restoreState', async () => {
+    await this.lock.acquire("restoreState", async () => {
       // Double-lock
       if (this.stateRestored) {
         return;
       }
 
-      this.log.debug('Checking for stored state.');
-      await init( {
+      this.log.debug("Checking for stored state.");
+      await init({
         expiredInterval: 1000 * 60 * 60 * 24 * 14, // Delete cached items after 14 days.
         forgiveParseErrors: true,
-        dir: this.storageDir,
+        dir: this.storageDir
       });
 
-      const value = await get(this.storageKey) as number;
+      const value = await get(this.storageKey) as number | undefined;
       if (value !== undefined && value > 0) {
-        this.log.info(`Restoring state to: ${value}`);
-        this.updateBrightness(value);
+        this.log.info(`Restoring state to: ${value.toString()}`);
+        await this.updateBrightness(value);
       }
 
       this.stateRestored = true;
@@ -173,5 +178,5 @@ class EggTimerBulb implements AccessoryPlugin {
 }
 
 export = (api: API) => {
-  api.registerAccessory('EggTimerBulb', EggTimerBulb);
+  api.registerAccessory("EggTimerBulb", EggTimerBulb);
 };
