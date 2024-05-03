@@ -19,6 +19,18 @@
                 "type": "integer",
                 "default": 60000,
                 "required": true
+            },
+            "stateful": {
+                "title": "Stateful",
+                "description": "Persist the timer state between restarts.",
+                "type": "boolean",
+                "required": false
+            },
+            "occupancySensor": {
+                "title": "Occupancy Sensor",
+                "description": "Add an occupancy sensor that reflects the timer's current state",
+                "type": "boolean",
+                "required": false
             }
         }
     }

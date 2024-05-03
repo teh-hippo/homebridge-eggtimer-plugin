@@ -1,6 +1,7 @@
 {
   "name": "homebridge-eggtimer-plugin",
-  "version": "1.0.7",
+  "displayName": "Homebridge Eggtimer Plugin",
+  "version": "1.0.30",
   "description": "Egg Timers for Homebridge: https://github.com/nfarina/homebridge",
   "license": "MIT",
   "keywords": [
@@ -11,7 +12,8 @@
     "countdown",
     "delay",
     "automation",
-    "homebridge"
+    "homebridge",
+    "persistent"
   ],
   "repository": {
     "type": "git",
@@ -24,56 +26,33 @@
     "type": "github",
     "url": "https://github.com/sponsors/teh-hippo"
   },
+  "main": "dist/accessory.js",
   "engines": {
     "node": ">=16.0.0",
-    "homebridge": ">=0.2.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.40.0",
-    "xo": "^0.54.2",
-    "yargs-parser": "^21.1.1",
-    "minimist": "^1.2.8"
+    "homebridge": ">=1.3.5"
   },
   "scripts": {
-    "test": "xo"
+    "lint": "eslint src",
+    "lintAndFix": "eslint --fix src",
+    "debug": "tsc && homebridge -I -D",
+    "build": "rimraf ./dist && tsc",
+    "prepublishOnly": "pnpm lint && pnpm build"
   },
-  "xo": {
-    "space": false,
-    "rules": {
-      "camelcase": "off",
-      "no-mixed-spaces-and-tabs": "warn",
-      "no-useless-escape": "warn",
-      "indent": "off",
-      "quotes": "warn",
-      "capitalized-comments": "off",
-      "no-var": "warn",
-      "prefer-destructuring": "off",
-      "prefer-arrow-callback": "warn",
-      "object-shorthand": [
-        "off",
-        "always",
-        {
-          "ignoreConstructors": true
-        }
-      ],
-      "quote-props": "error",
-      "no-unused-vars": "warn",
-      "curly": [
-        "error",
-        "multi-or-nest",
-        "consistent"
-      ],
-      "no-use-before-define": [
-        "error",
-        {
-          "classes": false
-        }
-      ],
-      "unicorn/prefer-ternary": "off",
-      "unicorn/prefer-switch": "warn",
-      "promise/prefer-await-to-then": "off",
-      "unicorn/prefer-module": "off",
-      "unicorn/expiring-todo-comments": "off"
-    }
-  }
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^1.8.0",
+    "@types/async-lock": "^1.4.2",
+    "@types/node": "^20.12.8",
+    "@types/node-persist": "^3.1.8",
+    "eslint": "^8.57.0",
+    "homebridge": "^1.8.1",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.8.0"
+  },
+  "dependencies": {
+    "async-lock": "^1.4.1",
+    "node-persist": "^4.0.1"
+  },
+  "packageManager": "pnpm@8.15.8+sha256.691fe176eea9a8a80df20e4976f3dfb44a04841ceb885638fe2a26174f81e65e"
 }
