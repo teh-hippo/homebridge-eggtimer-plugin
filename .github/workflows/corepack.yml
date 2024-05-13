@@ -34,11 +34,10 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
-        reviewers: teh-hippo
         delete-branch: true
         title: Update PNPM
         commit-message: |
           Update to the latest PNPM manager.
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
         committer: AutoHippo <auto@hippo.org>
         branch: autohippo/update-pnpm-${{ github.run_number }}
