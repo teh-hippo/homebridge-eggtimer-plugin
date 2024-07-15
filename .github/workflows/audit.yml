@@ -22,7 +22,7 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
     - name: Use Node.js 20.x
-      uses: actions/setup-node@v4.0.2
+      uses: actions/setup-node@v4.0.3
       with:
         node-version: 20.x
     - uses: pnpm/action-setup@v4
