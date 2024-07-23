@@ -17,25 +17,23 @@ jobs:
           find_pr() {
             author=$1
             term=$2
-            echo "Checking everything still exists:"
-            gh pr list -R ${{ github.repository }} --json author,title,number
             echo "Looking for PRs from ${author} with '${term}' in the title"
-            gh pr list -R '${{ github.repository }}' -A "${author}" --search "${term}" --json number --jq '.[].number'
-            for i in $(gh pr list -R '${{ github.repository }}' -A "${author}" --search "${term}" --json number --jq '.[].number'); do
+            gh pr list -R '${{ github.repository }}' --search "author:${author} '${term}'" --json number --jq '.[].number'
+            for i in $(gh pr list -R '${{ github.repository }}' --search "author:${author} '${term}'" --json number --jq '.[].number'); do
               gh pr merge -R ${{ github.repository }} --auto --rebase -d ${i}
             done
           }
 
           echo "Current PRs:"
           gh pr list -R ${{ github.repository }} --json author,title,number
-          echo "From author:"
-          gh pr list -R ${{ github.repository }} -A "${{ github.repository_owner }}" --json author,title,number
-          echo "From author with term:"
-          gh pr list -R ${{ github.repository }} -A "${{ github.repository_owner }}" --search "Update PNPM" --json author,title,number
+          echo "From author 1:"
+          gh pr list -R ${{ github.repository }} --search "author:teh-hippo 'Update PNPM'" --json author,title,number
+          echo "From author 2:"
+          gh pr list -R ${{ github.repository }} --search "author:'${{github.repository_owner}}' 'Update PNPM'" --json author,title,number
           echo "From dependabot:"
-          gh pr list -R ${{ github.repository }} -A "dependabot[bot]" --json author,title,number
-          echo "From dependabot with term:"
-          gh pr list -R ${{ github.repository }} -A "dependabot[bot]" --search "Bump" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:dependabot[bot] 'Bump'" --json author,title,number
+          echo "From dependabot closed:"
+          gh pr list -R ${{ github.repository }} --search "state:closed author:dependabot[bot] 'Bump'" --json author,title,number
 
           echo "Looking for PRs to merge"
           find_pr 'dependabot[bot]' 'Bump'
