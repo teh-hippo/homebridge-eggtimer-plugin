@@ -25,12 +25,14 @@ jobs:
 
           echo "Current PRs:"
           gh pr list -R ${{ github.repository }} --json author,title,number
+          echo "From author 0:"
+          gh pr list -R ${{ github.repository }} --search "author:teh-hippo" --json author,title,number
           echo "From author 1:"
-          gh pr list -R ${{ github.repository }} --search "state:open author:teh-hippo 'Update PNPM'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:teh-hippo 'Update PNPM'" --json author,title,number
           echo "From author 2:"
-          gh pr list -R ${{ github.repository }} --search "state:open author:'${{github.repository_owner}}' 'Update PNPM'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:'${{github.repository_owner}}' 'Update PNPM'" --json author,title,number
           echo "From dependabot:"
-          gh pr list -R ${{ github.repository }} --search "state:open author:dependabot[bot] 'Bump'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:dependabot[bot] 'Bump'" --json author,title,number
           echo "From dependabot closed:"
           gh pr list -R ${{ github.repository }} --search "state:closed author:dependabot[bot] 'Bump'" --json author,title,number
 
