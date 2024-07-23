@@ -1,16 +1,26 @@
-name: Auto-merge Dependabot
-on: pull_request
+name: Auto-merge
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 13 * * 4'
 
 permissions:
   pull-requests: write
-  contents: write
 
 jobs:
   automerge:
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || (startsWith(github.event.pull_request.title, 'Bump to version ') && (github.actor == 'github-actions' || github.actor == 'teh-hippo'))
     steps:
-      - uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ github.event.pull_request.number }}
-          merge-method: rebase
+      - run: |
+          find_pr() {
+            author=$1
+            term=$2
+            for i in $(gh pr list -R '${{ github.repository }}' -A "${author}" --search "${term}" --json number --jq '.[].number'); do
+              gh pr merge -R ${{ github.repository }} --auto --rebase -d ${i}
+            done
+          }
+
+          find_pr 'dependabot[bot]' 'Bump'
+          find_pr '${{ github.repository_owner }}' 'Update PNPM'
