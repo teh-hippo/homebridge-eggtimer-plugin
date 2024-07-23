@@ -4,8 +4,7 @@ on:
   schedule:
     - cron: '37 13 * * 4'
 
-permissions:
-  pull-requests: write
+permissions: write-all
 
 jobs:
   automerge:
