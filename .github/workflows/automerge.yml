@@ -5,14 +5,23 @@ on:
     - cron: '37 13 * * 4'
 
 permissions:
+  contents: read
   pull-requests: write
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AUTHOR: ${{ github.repository_owner }}
+      REPOSITORY: ${{ github.repository }}
     steps:
-      - uses: actions/checkout@v4
-      - run: |
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Verify gh
+        run: gh --version
+      - name: Check it
+        run: |
           find_pr() {
             author=$1
             term=$2
@@ -24,18 +33,18 @@ jobs:
           }
 
           echo "Current PRs:"
-          gh pr list -R ${{ github.repository }} --json author,title,number
+          gh pr list --repo ${{ env.REPOSITORY }}
           echo "From author 0:"
-          gh pr list -R ${{ github.repository }} --search "author:${{github.repository_owner_id}}" --json author,title,number
+          gh pr list --repo ${{ env.REPOSITORY }} --search "author:${{ env.AUTHOR }}"
           echo "From author 2:"
-          gh pr list -R ${{ github.repository }} --search "author:'${{github.repository_owner_id}}' 'Update PNPM'" --json author,title,number
+          gh pr list --repo ${{ env.REPOSITORY }} --search "author:${{ env.AUTHOR }} 'Update PNPM'"
           echo "From dependabot closed:"
-          gh pr list -R ${{ github.repository }} --search "state:closed author:dependabot[bot] 'Bump'" --json author,title,number
+          gh pr list --repo ${{ env.REPOSITORY }} --search "state:closed author:dependabot[bot] 'Bump'"
           echo "Are closed:"
-          gh pr list -R ${{ github.repository }} --search "state:closed" --json author,title,number
+          gh pr list --repo ${{ env.REPOSITORY }} --search "state:closed"
+          echo "Are open:"
+          gh pr list --repo ${{ env.REPOSITORY }} --search "state:open"
 
           echo "Looking for PRs to merge"
           find_pr 'dependabot[bot]' 'Bump'
           find_pr '${{ github.repository_owner }}' 'Update PNPM'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
