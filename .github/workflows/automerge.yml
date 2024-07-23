@@ -17,10 +17,17 @@ jobs:
           find_pr() {
             author=$1
             term=$2
+            echo "Looking for PRs from ${author} with '${term}' in the title"
+            echo "Found these:"
+            gh pr list -R '${{ github.repository }}' -A "${author}" --search "${term}" --json number --jq '.[].number'
             for i in $(gh pr list -R '${{ github.repository }}' -A "${author}" --search "${term}" --json number --jq '.[].number'); do
               gh pr merge -R ${{ github.repository }} --auto --rebase -d ${i}
             done
           }
 
+          echo "Current PRs"
+          gh pr list -R ${{ github.repository }} --json author,title,number
+
+          echo "Looking for PRs to merge"
           find_pr 'dependabot[bot]' 'Bump'
           find_pr '${{ github.repository_owner }}' 'Update PNPM'
