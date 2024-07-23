@@ -9,8 +9,6 @@ permissions:
 
 jobs:
   automerge:
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -20,20 +18,20 @@ jobs:
             echo "Looking for PRs from ${author} with '${term}' in the title"
             gh pr list --search "author:${author} '${term}'" --json number --jq '.[].number'
             for i in $(gh pr list --search "author:${author} '${term}'" --json number --jq '.[].number'); do
-              gh pr merge --auto --rebase -d ${i}
+              gh pr merge -R ${{ github.repository }} --auto --rebase -d ${i}
             done
           }
 
           echo "Current PRs:"
-          gh pr list --json author,title,number
+          gh pr list -R ${{ github.repository }} --json author,title,number
           echo "From author 1:"
-          gh pr list --search "author:teh-hippo 'Update PNPM'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:teh-hippo 'Update PNPM'" --json author,title,number
           echo "From author 2:"
-          gh pr list --search "author:'${{github.repository_owner}}' 'Update PNPM'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:'${{github.repository_owner}}' 'Update PNPM'" --json author,title,number
           echo "From dependabot:"
-          gh pr list --search "author:dependabot[bot] 'Bump'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "author:dependabot[bot] 'Bump'" --json author,title,number
           echo "From dependabot closed:"
-          gh pr list --search "state:closed author:dependabot[bot] 'Bump'" --json author,title,number
+          gh pr list -R ${{ github.repository }} --search "state:closed author:dependabot[bot] 'Bump'" --json author,title,number
 
           echo "Looking for PRs to merge"
           find_pr 'dependabot[bot]' 'Bump'
