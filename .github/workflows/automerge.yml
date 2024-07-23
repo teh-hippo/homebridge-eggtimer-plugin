@@ -9,8 +9,11 @@ permissions:
 
 jobs:
   automerge:
+    env:
+      GH_TOKEN: ${{ github.token }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: |
           find_pr() {
             author=$1
