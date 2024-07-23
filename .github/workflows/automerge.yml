@@ -9,8 +9,6 @@ permissions:
 
 jobs:
   automerge:
-    env:
-      GH_TOKEN: ${{ github.token }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,3 +37,5 @@ jobs:
           echo "Looking for PRs to merge"
           find_pr 'dependabot[bot]' 'Bump'
           find_pr '${{ github.repository_owner }}' 'Update PNPM'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
