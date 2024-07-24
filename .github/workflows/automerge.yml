@@ -4,23 +4,26 @@ on:
   schedule:
     - cron: '37 13 * * 4'
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   automerge:
     env:
-      GITHUB_TOKEN: ${{ secrets.PR_PAT }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - run: |
           find_pr() {
             author=$1
             term=$2
+            echo "Searching for PRs by ${author} with the term '${term}'..."
             for i in $(gh pr list -R '${{ github.repository }}' -A "${author}" --search "${term}" --json number --jq '.[].number'); do
-              echo "Marking PR\#${i} to auto-merge"
-              gh pr merge -R ${{ github.repository }} --auto --rebase -d ${i}
+              echo "Found PR #${i}"
+              gh pr checks -R ${{ github.repository }} ${i}
+              if [ $? -eq 0 ]; then
+                echo "✅ Merging #${i} as the checks have passed."
+                gh pr merge -R ${{ github.repository }} --auto --rebase -d ${i}
+              else
+                echo "❌ Isn't ready to be merged."
+              fi
             done
           }
 
