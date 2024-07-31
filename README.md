@@ -42,3 +42,47 @@ Other example usages found since:
 | `interval`| How often to decrement the brightness. | `60000` (1 minute) |
 | `stateful`| Persist the timer state between restarts. | `false` |
 | `occupancySensor`| Add an occupancy sensor that reflects the timer's current state. | `false` |
+
+## Development
+
+The below `config.json` can be placed in `~/.homebridge/config.json`, or extend local ones.
+Then use `pnpm link; pnpm debug` to validate.
+
+```json
+{
+    "bridge": {
+        "pin": "123-45-679",
+        "port": 51761,
+        "name": "Homebridge Test",
+        "username": "0E:BD:3C:CC:A7:E1"
+    },
+    "accessories": [
+        {
+            "name": "Simple",
+            "interval": 5000,
+            "occupancySensor": false,
+            "accessory": "EggTimerBulb"
+        },
+        {
+            "name": "Occupancy",
+            "interval": 1000,
+            "occupancySensor": true,
+            "accessory": "EggTimerBulb"
+        },
+        {
+            "name": "Stateful",
+            "interval": 10000,
+            "accessory": "EggTimerBulb",
+            "stateful": true
+        },
+        {
+            "name": "StatefulOccupancy",
+            "interval": 1000,
+            "occupancySensor": true,
+            "accessory": "EggTimerBulb",
+            "stateful": true
+        }
+    ]
+}
+
+```
