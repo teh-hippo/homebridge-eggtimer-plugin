@@ -10,10 +10,10 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       
   # Maintain dependencies for npm
   - package-ecosystem: "pnpm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
