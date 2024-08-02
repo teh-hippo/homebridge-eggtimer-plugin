@@ -36,7 +36,7 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-node@v4.0.3
         with:
-          node-version: 18
+          node-version: 22
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v4
       - run: pnpm version patch --no-git-tag-version

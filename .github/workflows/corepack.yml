@@ -27,9 +27,9 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.json') }}
     - uses: actions/setup-node@v4.0.3
       with:
-        node-version: 16.x
+        node-version: 22.x
     - uses: pnpm/action-setup@v4
-    - run: corepack up
+    - run: corepack up # Node 16.x is only supported up to pnpm 8.x.
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
