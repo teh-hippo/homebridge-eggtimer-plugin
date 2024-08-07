@@ -3,8 +3,7 @@
 
 name: Build
 
-on:
-  pull_request:
+on: [pull_request]
 
 jobs:
 
@@ -14,19 +13,16 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, latest]
 
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/cache@v4
-      name: Cache node modules
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
-    - uses: actions/setup-node@v4.0.3
+    - uses: pnpm/action-setup@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4.0.3
       with:
         node-version: ${{ matrix.node-version }}
-    - uses: pnpm/action-setup@v4
+        cache: pnpm
     - run: pnpm install --frozen-lockfile
-    - run: pnpm build
     - run: pnpm lint
+    - run: pnpm build
