@@ -6,7 +6,7 @@ name: Update PNPM
 on:
   
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '37 13 1 * *'
   workflow_dispatch:
     
 permissions:
@@ -20,16 +20,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/cache@v4
-      name: Cache node modules
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.json') }}
+    - uses: pnpm/action-setup@v4
     - uses: actions/setup-node@v4.0.3
       with:
-        node-version: 22.x
-    - uses: pnpm/action-setup@v4
-    - run: corepack up # Node 16.x is only supported up to pnpm 8.x.
+        node-version: latest
+        cache: pnpm
+    - run: corepack up
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
