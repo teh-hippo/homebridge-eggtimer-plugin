@@ -8,7 +8,7 @@ permissions:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || (startsWith(github.event.pull_request.title, 'Bump to version ') && (github.actor == 'github-actions' || github.actor == 'teh-hippo'))
+    if: github.actor == 'dependabot[bot]' || ((startsWith(github.event.pull_request.title, 'Bump to version ') || startsWith(github.event.pull_request.title, 'Update PNPM')) && (github.actor == 'github-actions' || github.actor == 'teh-hippo'))
     steps:
       - uses: peter-evans/enable-pull-request-automerge@v3
         with:
