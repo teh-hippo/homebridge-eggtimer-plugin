@@ -10,7 +10,7 @@ dependencies:
     version: 1.4.1
   node-persist:
     specifier: ^4.0.1
-    version: 4.0.3
+    version: 4.0.4
 
 devDependencies:
   '@stylistic/eslint-plugin':
@@ -1488,9 +1488,11 @@ packages:
       q: 1.1.2
     dev: true
 
-  /node-persist@4.0.3:
-    resolution: {integrity: sha512-0gDy86TNShzfbpUKFbH8KJFjoovuUgVh/FqL4jrJWYz0cET76Uohl118utG/Ft6wl4sHOPXdRSY7eXH5kVY06w==}
+  /node-persist@4.0.4:
+    resolution: {integrity: sha512-8sPAz/7tw1mCCc8xBG4f0wi+flHkSSgQeX998iQ75Pu27evA6UUWCjSE7xnrYTg2q33oU5leJ061EKPDv6BocQ==}
     engines: {node: '>=10.12.0'}
+    dependencies:
+      p-limit: 3.1.0
     dev: false
 
   /object-inspect@1.13.1:
@@ -1537,7 +1539,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yocto-queue: 0.1.0
-    dev: true
 
   /p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
@@ -2001,4 +2002,3 @@ packages:
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-    dev: true
