@@ -1,7 +1,7 @@
 {
   "name": "homebridge-eggtimer-plugin",
   "displayName": "Homebridge Eggtimer Plugin",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "Egg Timers for Homebridge: https://github.com/nfarina/homebridge",
   "license": "MIT",
   "keywords": [
