@@ -28,7 +28,7 @@
   },
   "main": "dist/accessory.js",
   "engines": {
-    "node": ">=16.0.0",
+    "node": ">=18.0.0",
     "homebridge": ">=1.3.5 || ^2.0.0-beta.0"
   },
   "scripts": {
@@ -54,5 +54,5 @@
     "async-lock": "^1.4.1",
     "node-persist": "^4.0.4"
   },
-  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81"
+  "packageManager": "pnpm@10.2.0+sha512.0d27364e0139c6aadeed65ada153135e0ca96c8da42123bd50047f961339dc7a758fc2e944b428f52be570d1bd3372455c1c65fa2e7aa0bfbf931190f9552001"
 }
