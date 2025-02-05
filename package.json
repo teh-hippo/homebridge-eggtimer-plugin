@@ -39,20 +39,20 @@
     "prepublishOnly": "pnpm lint && pnpm build"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.1.0",
+    "@stylistic/eslint-plugin": "^2.13.0",
     "@types/async-lock": "^1.4.2",
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.13.1",
     "@types/node-persist": "^3.1.8",
-    "eslint": "^9.9.0",
-    "homebridge": "^1.8.2",
+    "eslint": "^9.19.0",
+    "homebridge": "^1.8.5",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
   },
   "dependencies": {
     "async-lock": "^1.4.1",
-    "node-persist": "^4.0.1"
+    "node-persist": "^4.0.4"
   },
   "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81"
 }
