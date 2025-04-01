@@ -39,7 +39,7 @@
     "prepublishOnly": "pnpm lint && pnpm build"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^3.1.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
     "@types/async-lock": "^1.4.2",
     "@types/node": "^22.13.1",
     "@types/node-persist": "^3.1.8",
