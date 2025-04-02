@@ -49,8 +49,14 @@ class EggTimerBulb implements AccessoryPlugin {
       .onSet(this.setBrightness.bind(this));
 
     this.informationService = new this.hap.Service.AccessoryInformation()
-      .setCharacteristic(this.hap.Characteristic.Manufacturer, "Egg Timer Bulb")
-      .setCharacteristic(this.hap.Characteristic.Model, `${config.name} (${this.interval.toString()}ms)`);
+      .setCharacteristic(
+        this.hap.Characteristic.Manufacturer,
+        "Egg Timer Bulb"
+      )
+      .setCharacteristic(
+        this.hap.Characteristic.Model,
+        `${config.name} (${this.interval.toString()}ms)`
+      );
 
     this.stateful = config.stateful === true;
     this.storageKey = `${config.name}-${this.interval.toString()}`;
@@ -112,13 +118,22 @@ class EggTimerBulb implements AccessoryPlugin {
 
   private async updateBrightness(value: number): Promise<void> {
     this.log.debug(`Brightness: ${this.brightness.toString()} -> ${value.toString()}`);
-    this.brightness = Math.max(0, Math.min(100, value));
+    this.brightness = Math.max(
+      0,
+      Math.min(
+        100,
+        value
+      )
+    );
 
     // Persist state
     if (this.stateful) {
       if (this.brightness > 0) {
         this.log.debug("Caching state");
-        await set(this.storageKey, this.brightness);
+        await set(
+          this.storageKey,
+          this.brightness
+        );
       } else {
         this.log.debug("Deleting state");
         await del(this.storageKey);
@@ -127,20 +142,32 @@ class EggTimerBulb implements AccessoryPlugin {
 
     // Update HomeKit
     const isActive = this.brightness > 0;
-    this.lightbulbService.updateCharacteristic(this.hap.Characteristic.Brightness, this.brightness);
-    this.lightbulbService.updateCharacteristic(this.hap.Characteristic.On, isActive);
+    this.lightbulbService.updateCharacteristic(
+      this.hap.Characteristic.Brightness,
+      this.brightness
+    );
+    this.lightbulbService.updateCharacteristic(
+      this.hap.Characteristic.On,
+      isActive
+    );
     if (this.occupancyService !== undefined) {
-      this.occupancyService.updateCharacteristic(this.hap.Characteristic.OccupancyDetected, isActive);
+      this.occupancyService.updateCharacteristic(
+        this.hap.Characteristic.OccupancyDetected,
+        isActive
+      );
     }
 
     // Update Timer
     if (isActive && this.timer === undefined) {
       this.log.info("Starting timer");
-      this.timer = setInterval(() => {
-        this.updateBrightness(this.brightness - 1).catch((error: unknown) => {
-          this.log.error(String(error));
-        });
-      }, this.interval);
+      this.timer = setInterval(
+        () => {
+          this.updateBrightness(this.brightness - 1).catch((error: unknown) => {
+            this.log.error(String(error));
+          });
+        },
+        this.interval
+      );
     } else if (this.brightness === 0) {
       this.log.info("Timer completed.");
       clearInterval(this.timer);
@@ -153,30 +180,36 @@ class EggTimerBulb implements AccessoryPlugin {
       return;
     }
 
-    await this.lock.acquire("restoreState", async () => {
+    await this.lock.acquire(
+      "restoreState",
+      async () => {
       // Double-lock
-      if (this.stateRestored) {
-        return;
+        if (this.stateRestored) {
+          return;
+        }
+
+        this.log.debug("Checking for stored state.");
+        await init({
+          expiredInterval: 1000 * 60 * 60 * 24 * 14, // Delete cached items after 14 days.
+          forgiveParseErrors: true,
+          dir: this.storageDir
+        });
+
+        const value = await get(this.storageKey) as number | undefined;
+        if (value !== undefined && value > 0) {
+          this.log.info(`Restoring state to: ${value.toString()}`);
+          await this.updateBrightness(value);
+        }
+
+        this.stateRestored = true;
       }
-
-      this.log.debug("Checking for stored state.");
-      await init({
-        expiredInterval: 1000 * 60 * 60 * 24 * 14, // Delete cached items after 14 days.
-        forgiveParseErrors: true,
-        dir: this.storageDir
-      });
-
-      const value = await get(this.storageKey) as number | undefined;
-      if (value !== undefined && value > 0) {
-        this.log.info(`Restoring state to: ${value.toString()}`);
-        await this.updateBrightness(value);
-      }
-
-      this.stateRestored = true;
-    });
+    );
   }
 }
 
 export = (api: API) => {
-  api.registerAccessory("EggTimerBulb", EggTimerBulb);
+  api.registerAccessory(
+    "EggTimerBulb",
+    EggTimerBulb
+  );
 };
