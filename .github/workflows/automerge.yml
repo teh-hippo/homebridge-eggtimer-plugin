@@ -11,4 +11,4 @@ jobs:
     steps:
       - run: gh pr merge --rebase --delete-branch --auto
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ env.GH_TOKEN }}
