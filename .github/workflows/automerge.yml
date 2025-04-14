@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' || ((startsWith(github.event.pull_request.title, 'Bump to version ') || startsWith(github.event.pull_request.title, 'Update PNPM')) && (github.actor == 'github-actions' || github.actor == 'teh-hippo'))
     steps:
-      - uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ github.event.pull_request.number }}
-          merge-method: rebase
+      - run: gh pr merge --rebase --delete-branch --auto
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
