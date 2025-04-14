@@ -11,4 +11,4 @@ jobs:
     steps:
       - run: gh pr merge --rebase --delete-branch --auto
         env:
-          GH_TOKEN: ${{ env.GH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
