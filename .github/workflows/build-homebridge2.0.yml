@@ -19,7 +19,7 @@ jobs:
     - uses: pnpm/action-setup@v4
     - run: |
         sed -i -e 's/"homebridge": "\^[0-9]\.[0-9]\.[0-9]/"homebridge": "^2.0.0-beta.0/g' package.json
-    - uses: actions/setup-node@v4.3.0
+    - uses: actions/setup-node@v4.4.0
       with:
         node-version: latest
         cache: pnpm
