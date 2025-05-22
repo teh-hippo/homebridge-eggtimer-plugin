@@ -3,6 +3,9 @@
 
 name: Build Homebridge 2.x
 
+permissions:
+  contents: read
+
 on:
   pull_request:
   schedule:
