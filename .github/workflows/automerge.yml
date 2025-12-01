@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' || ((startsWith(github.event.pull_request.title, 'Bump to version ') || startsWith(github.event.pull_request.title, 'Update PNPM')) && (github.actor == 'github-actions' || github.actor == 'teh-hippo'))
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - run: gh pr merge --rebase --delete-branch --auto "${{ github.event.pull_request.number }}"
         env:
           GH_TOKEN: ${{ github.token }}
