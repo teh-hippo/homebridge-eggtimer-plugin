@@ -18,7 +18,7 @@ jobs:
       - uses: pnpm/action-setup@58e6119fe4f3092a76a7771efb55e04d25b6b26f
       - uses: actions/setup-node@v6.3.0
 =======
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
       - uses: actions/setup-node@v6.3.0
 >>>>>>> Stashed changes
         with:
