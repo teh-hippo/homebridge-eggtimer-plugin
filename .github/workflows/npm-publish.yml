@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 <<<<<<< Updated upstream
-      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      - uses: pnpm/action-setup@58e6119fe4f3092a76a7771efb55e04d25b6b26f
       - uses: actions/setup-node@v6.3.0
 ||||||| Stash base
-      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      - uses: pnpm/action-setup@58e6119fe4f3092a76a7771efb55e04d25b6b26f
       - uses: actions/setup-node@v6.2.0
 =======
       - uses: pnpm/action-setup@v4
