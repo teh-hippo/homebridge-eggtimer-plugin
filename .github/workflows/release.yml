@@ -35,6 +35,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: pnpm install --frozen-lockfile
+      - run: npm install -g npm@latest
       - run: pnpm build
 
       - name: Semantic Release
