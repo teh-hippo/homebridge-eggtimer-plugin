@@ -1,0 +1,23 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "releaseRules": [
+        { "type": "build", "scope": "deps", "release": "patch" },
+        { "type": "build", "scope": "deps-dev", "release": "patch" }
+      ]
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "presetConfig": {
+        "types": [
+          { "type": "feat", "section": "Features" },
+          { "type": "fix", "section": "Bug Fixes" },
+          { "type": "build", "section": "Dependencies", "hidden": false },
+          { "type": "perf", "section": "Performance" }
+        ]
+      }
+    }],
+    ["@semantic-release/npm", { "provenance": true }],
+    "@semantic-release/github"
+  ]
+}
