@@ -2,19 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "labels": ["dependencies"],
+  "automerge": true,
+  "platformAutomerge": true,
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["before 7am on Monday"],
-    "commitMessageAction": "upgrade",
-    "automerge": true
+    "commitMessageAction": "upgrade"
   },
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "groupName": "non-major dependencies",
-      "automerge": true
-    }
-  ],
   "commitMessagePrefix": "build(deps):",
   "dependencyDashboard": true
 }
